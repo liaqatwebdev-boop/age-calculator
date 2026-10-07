@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator – Exact Age in Years, Months, Days and Seconds</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style01.css">
+</head>
+<body>
+
+<main class="app">
+
+    <header class="intro">
+        <div class="intro-row">
+            <h1>Age Calculator</h1>
+            <button id="theme-btn" type="button" class="theme-btn">Dark mode</button>
+        </div>
+        <p>Find your exact age down to the second. Type your date of birth or pick it from the calendar.</p>
+    </header>
+
+    <section class="panel input-panel" aria-label="Date input">
+
+        <fieldset class="date-group" data-group="dob">
+            <legend>Date of birth</legend>
+            <label>Day<input id="dob-d" type="text" inputmode="numeric" maxlength="2" placeholder="DD" autocomplete="off"></label>
+            <label>Month<input id="dob-m" type="text" inputmode="numeric" maxlength="2" placeholder="MM" autocomplete="off"></label>
+            <label>Year<input id="dob-y" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY" autocomplete="off"></label>
+        </fieldset>
+
+        <label class="check">
+            <input type="checkbox" id="use-time">
+            <span>I know my birth time</span>
+        </label>
+
+        <fieldset class="date-group two" id="time-group" hidden>
+            <legend>Time of birth (24-hour)</legend>
+            <label>Hour<input id="tm-h" type="text" inputmode="numeric" maxlength="2" placeholder="HH" autocomplete="off"></label>
+            <label>Minute<input id="tm-m" type="text" inputmode="numeric" maxlength="2" placeholder="MM" autocomplete="off"></label>
+        </fieldset>
+
+        <label class="check">
+            <input type="checkbox" id="use-compare">
+            <span>Compare with another person</span>
+        </label>
+
+        <fieldset class="date-group" data-group="other" id="other-group" hidden>
+            <legend>Second person's date of birth</legend>
+            <label>Day<input id="ot-d" type="text" inputmode="numeric" maxlength="2" placeholder="DD" autocomplete="off"></label>
+            <label>Month<input id="ot-m" type="text" inputmode="numeric" maxlength="2" placeholder="MM" autocomplete="off"></label>
+            <label>Year<input id="ot-y" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY" autocomplete="off"></label>
+        </fieldset>
+
+        <label class="check">
+            <input type="checkbox" id="use-target">
+            <span>Calculate age on a different date</span>
+        </label>
+
+        <fieldset class="date-group" data-group="target" id="target-group" hidden>
+            <legend>Age on this date</legend>
+            <label>Day<input id="tg-d" type="text" inputmode="numeric" maxlength="2" placeholder="DD" autocomplete="off"></label>
+            <label>Month<input id="tg-m" type="text" inputmode="numeric" maxlength="2" placeholder="MM" autocomplete="off"></label>
+            <label>Year<input id="tg-y" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY" autocomplete="off"></label>
+        </fieldset>
+
+        <p id="error" class="error" role="alert"></p>
+
+        <div class="actions">
+            <button id="calculate-btn" type="button">Calculate age</button>
+            <button id="clear-btn" type="button" class="ghost">Clear</button>
+        </div>
+
+        <div class="calendar" aria-label="Calendar">
+            <p class="cal-hint">Click a day to set <strong id="cal-target">your date of birth</strong></p>
+            <div class="cal-head">
+                <button type="button" id="cal-prev" aria-label="Previous month">&lsaquo;</button>
+                <select id="cal-month" aria-label="Month"></select>
+                <select id="cal-year" aria-label="Year"></select>
+                <button type="button" id="cal-next" aria-label="Next month">&rsaquo;</button>
+            </div>
+            <div class="cal-week">
+                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+            <button type="button" id="cal-today" class="link">Jump to today</button>
+        </div>
+
+    </section>
+
+    <section class="panel result-panel" aria-live="polite">
+
+        <div id="empty" class="empty">
+            <p class="empty-title">Your age will show here</p>
+            <p>Enter a date of birth and press <strong>Calculate age</strong>. The numbers tick live every second.</p>
+        </div>
+
+        <div id="output" hidden>
+
+            <div class="hero">
+                <span id="years" class="hero-num">0</span>
+                <span class="hero-label">years old</span>
+            </div>
+            <p id="summary" class="summary"></p>
+
+            <div class="units">
+                <div><span id="months">0</span><small>Months</small></div>
+                <div><span id="days">0</span><small>Days</small></div>
+                <div><span id="hours">0</span><small>Hours</small></div>
+                <div><span id="minutes">0</span><small>Minutes</small></div>
+                <div><span id="seconds">0</span><small>Seconds</small></div>
+            </div>
+
+            <div class="birthday">
+                <div class="birthday-top">
+                    <span>Next birthday</span>
+                    <strong id="next-bday">-</strong>
+                </div>
+                <div class="bar"><i id="bday-bar"></i></div>
+                <p id="bday-note"></p>
+            </div>
+
+            <div class="compare" id="compare" hidden>
+                <strong>Age comparison</strong>
+                <p id="cmp-1"></p>
+                <p id="cmp-2"></p>
+                <p id="cmp-diff" class="cmp-diff"></p>
+            </div>
+
+            <dl class="facts">
+                <div><dt>Born on</dt><dd id="born-day">-</dd></div>
+                <div><dt>Zodiac sign</dt><dd id="zodiac">-</dd></div>
+                <div><dt>Total months</dt><dd id="t-months">-</dd></div>
+                <div><dt>Total weeks</dt><dd id="t-weeks">-</dd></div>
+                <div><dt>Total days</dt><dd id="t-days">-</dd></div>
+                <div><dt>Total hours</dt><dd id="t-hours">-</dd></div>
+                <div><dt>Total minutes</dt><dd id="t-minutes">-</dd></div>
+                <div><dt>Total seconds</dt><dd id="t-seconds">-</dd></div>
+            </dl>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="script01.js"></script>
+</body>
+                           </html>
+                         
